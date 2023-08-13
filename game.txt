@@ -1,0 +1,39 @@
+We define following abstract game: 
+
+For some abstract functionality F, adversary A commits to N elements such that it knows to compute F for K elements.
+Then it plays two games: 
+
+G1: 
+This game uniformly samples n1 pairwise distinct indices from [N], call this set S1. 
+If A knows how to compute F for all n1 elements, it wins. 
+
+G2: 
+This game uniformly samples n1 pairwise distinct indices from [N]/S1, call this set S2. 
+If A doesn't know how to compute F for all n2 elements, it wins.
+
+We can model this games with negative hypergeometric distribution as follows. When game samples index i, 
+if A knows how to compute F for for i, we mark this event as 1, and naturally with 0 when A doesn't know how to compute it.
+
+G1: 
+A fails to win when any of these events happen: 
+e0: 0 
+e1: 1, 0 
+e2: 1, 1, 0 
+e3: 1, 1, 1, 0 
+.
+.
+e_n1: 1, .. 1 {n1 - 1 times}, 0 
+
+so A wins with probability: 1- (sum e_i)
+
+G2: 
+A fails to win when any of these events happen: 
+e0: 1 
+e1: 0, 1 
+e2: 0, 0, 1
+e3: 0, 0, 0, 1 
+.
+.
+e_n2: 0, .. 0 {n2 - 1 times}, 1
+
+so A wins with probability: 1- (sum e_i)
