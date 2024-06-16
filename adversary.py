@@ -15,9 +15,7 @@ from scipy.stats import nhypergeom
 def win_game(needed_s_samples: int, num_of_s: int, M: int):
     if num_of_s < needed_s_samples: 
         return (False, 0.0)
-    fail_prob = 0.0
-    for ki in range(0, needed_s_samples): 
-        fail_prob += nhypergeom.pmf(k=ki, M=M, n=num_of_s, r=1)
+    fail_prob = sum(nhypergeom.pmf(k=ki, M=M, n=num_of_s, r=1) for ki in range(0, needed_s_samples))
 
     return (True, 1.0 - fail_prob)
 
@@ -44,15 +42,6 @@ n2 = 6
 
 probs = [(k_dl, win_both_games(M, k_dl, n1, n2)) for k_dl in range(n1, M)]
 
-max_prob = float('-inf')
-max_k_dl = -1
-
-for k_dl, prob in probs:
-    if prob is None: 
-        continue
-
-    if prob > max_prob:
-        max_prob = prob
-        max_k_dl = k_dl
+max_prob, max_k_dl = max((prob, k_dl) for k_dl, prob in probs if prob is not None)
 
 print(f"The maximum probability is {max_prob} and it is achieved for k_dl={max_k_dl}")
